@@ -1,0 +1,8 @@
+c:\users\will\documents\visual studio 2013\Projects\IniEditor\IniTest\bin\Release\IniTest.exe.config
+c:\users\will\documents\visual studio 2013\Projects\IniEditor\IniTest\bin\Release\IniTest.exe
+c:\users\will\documents\visual studio 2013\Projects\IniEditor\IniTest\bin\Release\IniTest.pdb
+c:\users\will\documents\visual studio 2013\Projects\IniEditor\IniTest\bin\Release\Ini.dll
+c:\users\will\documents\visual studio 2013\Projects\IniEditor\IniTest\bin\Release\Ini.pdb
+c:\users\will\documents\visual studio 2013\Projects\IniEditor\IniTest\obj\Release\IniTest.csprojResolveAssemblyReference.cache
+c:\users\will\documents\visual studio 2013\Projects\IniEditor\IniTest\obj\Release\IniTest.exe
+c:\users\will\documents\visual studio 2013\Projects\IniEditor\IniTest\obj\Release\IniTest.pdb
