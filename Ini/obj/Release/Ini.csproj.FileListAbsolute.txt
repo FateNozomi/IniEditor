@@ -1,5 +1,0 @@
-c:\users\will\documents\visual studio 2013\Projects\IniEditor\Ini\bin\Release\Ini.dll
-c:\users\will\documents\visual studio 2013\Projects\IniEditor\Ini\bin\Release\Ini.pdb
-c:\users\will\documents\visual studio 2013\Projects\IniEditor\Ini\obj\Release\Ini.dll
-c:\users\will\documents\visual studio 2013\Projects\IniEditor\Ini\obj\Release\Ini.pdb
-c:\users\will\documents\visual studio 2013\Projects\IniEditor\Ini\obj\Release\Ini.csprojResolveAssemblyReference.cache
