@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Diagnostics;
 using Ini;
 
 namespace IniTest
@@ -26,35 +26,34 @@ namespace IniTest
 
         private static void DoWork()
         {
-            List<bool> success = new List<bool>();
             Console.ReadLine();
 
             // ini writing
             IniWriter writer = new IniWriter(@"test.ini");
             Console.WriteLine();
             Console.WriteLine("IniWriter");
-            Stopwatch sw = Stopwatch.StartNew();
-            Console.WriteLine("Time Elapsed {0}", sw.ElapsedMilliseconds);
-            success.Add(writer.WriteString("Lot", "LOTID", "TEST_2"));
-            success.Add(writer.WriteString("Lot", "LFID", "LTEST_2M01S04"));
-            success.Add(writer.WriteString("Lot", "MAGAZINEID", "MAG001"));
-            success.Add(writer.WriteInt("Lot", "SLOTID", 1));
-            success.Add(writer.WriteString("Lot", "BONDINGDIAGRAM", "VNQ3"));
-            success.Add(writer.WriteString("Lot", "INSPECTMODE", "MANUAL"));
-            success.Add(writer.WriteInt("Lot", "NOOFROW", 4));
-            success.Add(writer.WriteInt("Lot", "NOOFCOL", 24));
-            success.Add(writer.WriteString("Lot", "ORGIN", "Top-Right"));
-            success.Add(writer.WriteString("Lot", "DIRECION", "Top-Right"));
-            success.Add(writer.WriteString("Lot", "MATRIX", "1x1"));
-            success.Add(writer.WriteString("Lot", "STATUS", "NEWLOT"));
 
-            Console.WriteLine("Time Elapsed {0}", sw.ElapsedMilliseconds);
+            Stopwatch sw = Stopwatch.StartNew();
+            writer.WriteString("Lot", "LOTID", "TEST_2");
+            writer.WriteString("Lot", "LFID", "LTEST_2M01S04");
+            writer.WriteString("Lot", "MAGAZINEID", "MAG001");
+            writer.WriteInt("Lot", "SLOTID", 1);
+            writer.WriteString("Lot", "BONDINGDIAGRAM", "VNQ3");
+            writer.WriteString("Lot", "INSPECTMODE", "MANUAL");
+            writer.WriteInt("Lot", "NOOFROW", 4);
+            writer.WriteInt("Lot", "NOOFCOL", 24);
+            writer.WriteString("Lot", "ORGIN", "Top-Right");
+            writer.WriteString("Lot", "DIRECION", "Top-Right");
+            writer.WriteString("Lot", "MATRIX", "1x1");
+            writer.WriteString("Lot", "STATUS", "NEWLOT");
+
+            Console.WriteLine("Time Elapsed for IniWriter Write: {0}", sw.ElapsedMilliseconds);
 
             // Ini reading
             IniReader reader = new IniReader(@"test.ini");
-            sw = Stopwatch.StartNew();
-            Console.WriteLine("Time Elapsed {0}", sw.ElapsedMilliseconds);
-            string LotId = string.Empty;
+            Console.WriteLine();
+            Console.WriteLine("IniReader");
+            string lotId = string.Empty;
             string lfid = string.Empty;
             string magazineId = string.Empty;
             int slotId = 0;
@@ -67,31 +66,30 @@ namespace IniTest
             string matrix = string.Empty;
             string status = string.Empty;
 
-            success.Add(reader.ReadString("Lot", "LOTID", ref LotId));
-            success.Add(reader.ReadString("Lot", "LFID", ref lfid));
-            success.Add(reader.ReadString("Lot", "MAGAZINEID", ref magazineId));
-            success.Add(reader.ReadInt("Lot", "SLOTID", ref slotId));
-            success.Add(reader.ReadString("Lot", "BONDINGDIAGRAM", ref bondingDiagram));
-            success.Add(reader.ReadString("Lot", "INSPECTMODE", ref inspectMode));
-            success.Add(reader.ReadInt("Lot", "NOOFROW", ref noOfRow));
-            success.Add(reader.ReadInt("Lot", "NOOFCOL", ref noOfCol));
-            success.Add(reader.ReadString("Lot", "ORGIN", ref origin));
-            success.Add(reader.ReadString("Lot", "DIRECION", ref direction));
-            success.Add(reader.ReadString("Lot", "MATRIX", ref matrix));
-            success.Add(reader.ReadString("Lot", "STATUS", ref status));
-            Console.WriteLine("Time Elapsed {0}", sw.ElapsedMilliseconds);
+            sw = Stopwatch.StartNew();
+            Console.WriteLine(reader.ReadString("Lot", "LOTID", lotId));
+            Console.WriteLine(reader.ReadString("Lot", "LFID", lfid));
+            Console.WriteLine(reader.ReadString("Lot", "MAGAZINEID", magazineId));
+            Console.WriteLine(reader.ReadInt("Lot", "SLOTID", slotId));
+            Console.WriteLine(reader.ReadString("Lot", "BONDINGDIAGRAM", bondingDiagram));
+            Console.WriteLine(reader.ReadString("Lot", "INSPECTMODE", inspectMode));
+            Console.WriteLine(reader.ReadInt("Lot", "NOOFROW", noOfRow));
+            Console.WriteLine(reader.ReadInt("Lot", "NOOFCOL", noOfCol));
+            Console.WriteLine(reader.ReadString("Lot", "ORGIN", origin));
+            Console.WriteLine(reader.ReadString("Lot", "DIRECION", direction));
+            Console.WriteLine(reader.ReadString("Lot", "MATRIX", matrix));
+            Console.WriteLine(reader.ReadString("Lot", "STATUS", status));
+            Console.WriteLine("Time Elapsed for IniReader Read:  {0}", sw.ElapsedMilliseconds);
 
             // ini sorting
             sw = Stopwatch.StartNew();
-            Console.WriteLine("Time Elapsed {0}", sw.ElapsedMilliseconds);
             writer.SortIni();
-            Console.WriteLine("Time Elapsed {0}", sw.ElapsedMilliseconds);
+            Console.WriteLine("Time Elapsed for IniWriter SortIni: {0}", sw.ElapsedMilliseconds);
 
             // ini clearing
-            sw = Stopwatch.StartNew();
-            Console.WriteLine("Time Elapsed {0}", sw.ElapsedMilliseconds);
-            writer.ClearIni();
-            Console.WriteLine("Time Elapsed {0}", sw.ElapsedMilliseconds);
+            // sw = Stopwatch.StartNew();
+            // writer.ClearIni();
+            // Console.WriteLine("Time Elapsed for InitWriter ClearIni: {0}", sw.ElapsedMilliseconds);
         }
     }
 }

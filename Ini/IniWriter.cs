@@ -7,78 +7,70 @@ namespace Ini
 {
     public class IniWriter
     {
-        private string filePath;
-        private IniReader iniReader;
+        private readonly string filePath;
+        private readonly IniConverter iniConverter;
 
         public IniWriter(string filePath)
         {
             this.filePath = filePath;
-            this.iniReader = new IniReader(this.filePath);
+            this.iniConverter = new IniConverter(this.filePath);
         }
 
-        public bool FileExist
-        {
-            get
-            {
-                return File.Exists(this.filePath);
-            }
-        }
-
-        public bool WriteString(string section, string key, string value)
+        public void WriteString(string section, string key, string value)
         {
             value = "\"" + value + "\"";
 
-            return this.WriteProperty(section, key, value);
+            this.WriteProperty(section, key, value);
         }
 
-        public bool WriteByte(string section, string key, byte value)
+        public void WriteByte(string section, string key, byte value)
         {
-            return this.WriteProperty(section, key, value.ToString());
+            this.WriteProperty(section, key, value.ToString());
         }
 
-        public bool WriteSByte(string section, string key, sbyte value)
+        public void WriteSByte(string section, string key, sbyte value)
         {
-            return this.WriteProperty(section, key, value.ToString());
+            this.WriteProperty(section, key, value.ToString());
         }
 
-        public bool WriteShort(string section, string key, short value)
+        public void WriteShort(string section, string key, short value)
         {
-            return this.WriteProperty(section, key, value.ToString());
+            this.WriteProperty(section, key, value.ToString());
         }
 
-        public bool WriteUShort(string section, string key, ushort value)
+        public void WriteUShort(string section, string key, ushort value)
         {
-            return this.WriteProperty(section, key, value.ToString());
+            this.WriteProperty(section, key, value.ToString());
         }
 
-        public bool WriteInt(string section, string key, int value)
+        public void WriteInt(string section, string key, int value)
         {
-            return this.WriteProperty(section, key, value.ToString());
+            this.WriteProperty(section, key, value.ToString());
         }
 
-        public bool WriteUInt(string section, string key, uint value)
+        public void WriteUInt(string section, string key, uint value)
         {
-            return this.WriteProperty(section, key, value.ToString());
+            this.WriteProperty(section, key, value.ToString());
         }
 
-        public bool WriteDouble(string section, string key, double value)
+        public void WriteDouble(string section, string key, double value)
         {
-            return this.WriteProperty(section, key, value.ToString());
+            this.WriteProperty(section, key, value.ToString());
         }
 
-        public bool WriteDecimal(string section, string key, decimal value)
+        public void WriteDecimal(string section, string key, decimal value)
         {
-            return this.WriteProperty(section, key, value.ToString());
+            this.WriteProperty(section, key, value.ToString());
         }
 
-        public bool WriteBool(string section, string key, bool value)
+        public void WriteBool(string section, string key, bool value)
         {
-            return this.WriteProperty(section, key, value ? bool.TrueString : bool.FalseString);
+            this.WriteProperty(section, key, value ? bool.TrueString : bool.FalseString);
         }
 
         public bool RemoveSection(string section)
         {
-            Dictionary<string, Dictionary<string, string>> sections = this.iniReader.ReadFile();
+            Dictionary<string, Dictionary<string, string>> sections = this.iniConverter.ReadFile();
             section = '[' + section + ']';
 
             if (!sections.Any())
@@ -91,12 +83,13 @@ namespace Ini
                 return false;
             }
 
-            return this.WriteFile(sections);
+            this.WriteFile(sections);
+            return true;
         }
 
         public bool SortIni()
         {
-            var sections = this.iniReader.ReadSortedFile();
+            var sections = this.iniConverter.ReadSortedFile();
 
             if (sections.Any())
             {
@@ -107,26 +100,16 @@ namespace Ini
             return false;
         }
 
-        public bool ClearIni()
+        private void WriteProperty(string section, string key, string value)
         {
-            bool result = false;
+            Dictionary<string, Dictionary<string, string>> sections = new Dictionary<string, Dictionary<string, string>>();
 
-            try
+            // Read from file only if it exists to allow creation of new .ini file by default.
+            if (File.Exists(this.filePath))
             {
-                File.WriteAllText(this.filePath, string.Empty);
-                result = true;
-            }
-            catch (Exception)
-            {
-                result = false;
+                sections = this.iniConverter.ReadFile();
             }
 
-            return result;
-        }
-
-        private bool WriteProperty(string section, string key, string value)
-        {
-            Dictionary<string, Dictionary<string, string>> sections = this.iniReader.ReadFile();
             Dictionary<string, string> newSection;
             section = '[' + section + ']';
 
@@ -148,64 +131,46 @@ namespace Ini
                 sections.Add(section, newSection);
             }
 
-            return this.WriteFile(sections);
+            this.WriteFile(sections);
         }
 
-        private bool WriteFile(Dictionary<string, Dictionary<string, string>> lines)
+        private void WriteFile(Dictionary<string, Dictionary<string, string>> lines)
         {
-            try
+            using (FileStream stream = new FileStream(this.filePath, FileMode.Create, FileAccess.ReadWrite, FileShare.Read))
             {
-                using (FileStream stream = new FileStream(this.filePath, FileMode.Create, FileAccess.ReadWrite, FileShare.Read))
+                using (StreamWriter writer = new StreamWriter(stream))
                 {
-                    using (StreamWriter writer = new StreamWriter(stream))
+                    foreach (var section in lines)
                     {
-                        foreach (var section in lines)
+                        writer.WriteLine(section.Key);
+                        foreach (var property in section.Value)
                         {
-                            writer.WriteLine(section.Key);
-                            foreach (var property in section.Value)
-                            {
-                                writer.WriteLine(string.Format("{0}={1}", property.Key, property.Value));
-                            }
-
-                            writer.WriteLine();
+                            writer.WriteLine(string.Format("{0}={1}", property.Key, property.Value));
                         }
+
+                        writer.WriteLine();
                     }
                 }
-
-                return true;
-            }
-            catch (Exception)
-            {
-                return false;
             }
         }
 
-        private bool WriteSortedFile(SortedDictionary<string, SortedDictionary<string, string>> lines)
+        private void WriteSortedFile(SortedDictionary<string, SortedDictionary<string, string>> lines)
         {
-            try
+            using (FileStream stream = new FileStream(this.filePath, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.Read))
             {
-                using (FileStream stream = new FileStream(this.filePath, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.Read))
+                using (StreamWriter writer = new StreamWriter(stream))
                 {
-                    using (StreamWriter writer = new StreamWriter(stream))
+                    foreach (var section in lines)
                     {
-                        foreach (var section in lines)
+                        writer.WriteLine(section.Key);
+                        foreach (var property in section.Value)
                         {
-                            writer.WriteLine(section.Key);
-                            foreach (var property in section.Value)
-                            {
-                                writer.WriteLine(string.Format("{0}={1}", property.Key, property.Value));
-                            }
-
-                            writer.WriteLine();
+                            writer.WriteLine(string.Format("{0}={1}", property.Key, property.Value));
                         }
+
+                        writer.WriteLine();
                     }
                 }
-
-                return true;
-            }
-            catch (Exception)
-            {
-                return false;
             }
         }
     }

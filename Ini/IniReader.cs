@@ -6,22 +6,13 @@ namespace Ini
 {
     public class IniReader
     {
-        private string filePath;
+        private readonly IniConverter iniConverter;
 
         public IniReader(string filePath)
         {
-            this.filePath = filePath;
+            this.iniConverter = new IniConverter(filePath);
         }
 
-        public bool FileExist
-        {
-            get
-            {
-                return File.Exists(this.filePath);
-            }
-        }
-
-        #region ReadString
         public string ReadString(string section, string key, string defaultValue = null)
         {
             string value = this.ReadProperty(section, key);
@@ -29,23 +20,6 @@ namespace Ini
             return value != null ? value.Trim(new[] { '"' }) : defaultValue;
         }
 
-        public bool ReadString(string section, string key, ref string value)
-        {
-            string retValue = this.ReadProperty(section, key);
-
-            if (retValue != null)
-            {
-                value = retValue.Trim(new[] { '"' });
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-        #endregion
-
-        #region ReadByte
         public byte ReadByte(string section, string key, byte defaultValue = 0)
         {
             string value = this.ReadProperty(section, key);
@@ -56,25 +30,6 @@ namespace Ini
             return parsed ? byteValue : defaultValue;
         }
 
-        public bool ReadByte(string section, string key, ref byte value)
-        {
-            string retValue = this.ReadProperty(section, key);
-
-            if (retValue != null)
-            {
-                byte byteValue = 0;
-                bool parsed = byte.TryParse(retValue, out byteValue);
-                value = byteValue;
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-        #endregion
-
-        #region ReadSByte
         public sbyte ReadSByte(string section, string key, sbyte defaultValue = 0)
         {
             string value = this.ReadProperty(section, key);
@@ -85,25 +40,6 @@ namespace Ini
             return parsed ? sbyteValue : defaultValue;
         }
 
-        public bool ReadSByte(string section, string key, ref sbyte value)
-        {
-            string retValue = this.ReadProperty(section, key);
-
-            if (retValue != null)
-            {
-                sbyte sbyteValue = 0;
-                bool parsed = sbyte.TryParse(retValue, out sbyteValue);
-                value = sbyteValue;
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-        #endregion
-
-        #region ReadShort
         public short ReadShort(string section, string key, short defaultValue = 0)
         {
             string value = this.ReadProperty(section, key);
@@ -114,25 +50,6 @@ namespace Ini
             return parsed ? shortValue : defaultValue;
         }
 
-        public bool ReadShort(string section, string key, ref short value)
-        {
-            string retValue = this.ReadProperty(section, key);
-
-            if (retValue != null)
-            {
-                short shortValue = 0;
-                bool parsed = short.TryParse(retValue, out shortValue);
-                value = shortValue;
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-        #endregion
-
-        #region ReadUShort
         public ushort ReadUShort(string section, string key, ushort defaultValue = 0)
         {
             string value = this.ReadProperty(section, key);
@@ -143,25 +60,6 @@ namespace Ini
             return parsed ? ushortValue : defaultValue;
         }
 
-        public bool ReadUShort(string section, string key, ref ushort value)
-        {
-            string retValue = this.ReadProperty(section, key);
-
-            if (retValue != null)
-            {
-                ushort ushortValue = 0;
-                bool parsed = ushort.TryParse(retValue, out ushortValue);
-                value = ushortValue;
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-        #endregion
-
-        #region ReadInt
         public int ReadInt(string section, string key, int defaultValue = 0)
         {
             string value = this.ReadProperty(section, key);
@@ -172,25 +70,6 @@ namespace Ini
             return parsed ? intValue : defaultValue;
         }
 
-        public bool ReadInt(string section, string key, ref int value)
-        {
-            string retValue = this.ReadProperty(section, key);
-
-            if (retValue != null)
-            {
-                int intValue = 0;
-                bool parsed = int.TryParse(retValue, out intValue);
-                value = intValue;
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-        #endregion
-
-        #region ReadUInt
         public uint ReadUInt(string section, string key, uint defaultValue = 0)
         {
             string value = this.ReadProperty(section, key);
@@ -201,25 +80,6 @@ namespace Ini
             return parsed ? uintValue : defaultValue;
         }
 
-        public bool ReadUInt(string section, string key, ref uint value)
-        {
-            string retValue = this.ReadProperty(section, key);
-
-            if (retValue != null)
-            {
-                uint uintValue = 0;
-                bool parsed = uint.TryParse(retValue, out uintValue);
-                value = uintValue;
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-        #endregion
-
-        #region ReadDouble
         public double ReadDouble(string section, string key, double defaultValue = 0.0)
         {
             string value = this.ReadProperty(section, key);
@@ -230,25 +90,6 @@ namespace Ini
             return parsed ? doubleValue : defaultValue;
         }
 
-        public bool ReadDouble(string section, string key, ref double value)
-        {
-            string retValue = this.ReadProperty(section, key);
-
-            if (retValue != null)
-            {
-                double doubleValue = 0.0;
-                bool parsed = double.TryParse(retValue, out doubleValue);
-                value = doubleValue;
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-        #endregion
-
-        #region ReadDecimal
         public decimal ReadDecimal(string section, string key, decimal defaultValue = 0.0m)
         {
             string value = this.ReadProperty(section, key);
@@ -259,25 +100,6 @@ namespace Ini
             return parsed ? decimalValue : defaultValue;
         }
 
-        public bool ReadDecimal(string section, string key, ref decimal value)
-        {
-            string retValue = this.ReadProperty(section, key);
-
-            if (retValue != null)
-            {
-                decimal decimalValue = 0.0m;
-                bool parsed = decimal.TryParse(retValue, out decimalValue);
-                value = decimalValue;
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-        #endregion
-
-        #region ReadBool
         public bool ReadBool(string section, string key, bool defaultValue = false)
         {
             string value = this.ReadProperty(section, key);
@@ -288,27 +110,9 @@ namespace Ini
             return parsed ? boolValue : defaultValue;
         }
 
-        public bool ReadBool(string section, string key, ref bool value)
-        {
-            string retValue = this.ReadProperty(section, key);
-
-            if (retValue != null)
-            {
-                bool boolValue = false;
-                bool parsed = bool.TryParse(retValue, out boolValue);
-                value = boolValue;
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-        #endregion
-
         public List<string> GetSections()
         {
-            Dictionary<string, Dictionary<string, string>> lines = this.ReadFile();
+            Dictionary<string, Dictionary<string, string>> lines = this.iniConverter.ReadFile();
             return lines.Keys.Select(section => section.Trim(
                 new[]
                 {
@@ -319,95 +123,26 @@ namespace Ini
 
         public int GetSectionCount()
         {
-            Dictionary<string, Dictionary<string, string>> lines = this.ReadFile();
-            return lines.Keys.Count;
+            Dictionary<string, Dictionary<string, string>> sections = this.iniConverter.ReadFile();
+            return sections.Keys.Count;
         }
 
-        public Dictionary<string, Dictionary<string, string>> ReadFile()
+        public int GetPropertiesCount(string section)
         {
-            Dictionary<string, Dictionary<string, string>> sections = new Dictionary<string, Dictionary<string, string>>();
-            Dictionary<string, string> properties = null;
+            Dictionary<string, Dictionary<string, string>> sections = this.iniConverter.ReadFile();
+            section = '[' + section + ']';
 
-            string line = null;
-
-            if (this.FileExist)
+            if (!sections.ContainsKey(section))
             {
-                using (FileStream file = new FileStream(this.filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
-                {
-                    using (StreamReader sr = new StreamReader(file))
-                    {
-                        while ((line = sr.ReadLine()) != null)
-                        {
-                            line = line.Trim();
-
-                            if (line != string.Empty)
-                            {
-                                if (line[0] == '[' && line[line.Length - 1] == ']')
-                                {
-                                    properties = new Dictionary<string, string>();
-                                    sections.Add(line, properties);
-                                }
-                                else
-                                {
-                                    string[] property = line.Split(new[] { '=' }, 2);
-                                    if (properties != null)
-                                    {
-                                        properties.Add(property[0].Trim(), property[1].Trim());
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
+                return 0;
             }
 
-            return sections;
-        }
-
-        public SortedDictionary<string, SortedDictionary<string, string>> ReadSortedFile()
-        {
-            SortedDictionary<string, SortedDictionary<string, string>> sections = new SortedDictionary<string, SortedDictionary<string, string>>();
-            SortedDictionary<string, string> properties = null;
-
-            string line = null;
-
-            if (this.FileExist)
-            {
-                using (FileStream file = new FileStream(this.filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
-                {
-                    using (StreamReader sr = new StreamReader(file))
-                    {
-                        while ((line = sr.ReadLine()) != null)
-                        {
-                            line = line.Trim();
-
-                            if (line != string.Empty)
-                            {
-                                if (line[0] == '[' && line[line.Length - 1] == ']')
-                                {
-                                    properties = new SortedDictionary<string, string>();
-                                    sections.Add(line, properties);
-                                }
-                                else
-                                {
-                                    string[] property = line.Split(new[] { '=' }, 2);
-                                    if (properties != null)
-                                    {
-                                        properties.Add(property[0].Trim(), property[1].Trim());
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            return sections;
+            return sections[section].Count;
         }
 
         private string ReadProperty(string section, string key)
         {
-            var sections = this.ReadFile();
+            var sections = this.iniConverter.ReadFile();
             string value = null;
             section = '[' + section + ']';
 
